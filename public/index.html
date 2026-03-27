@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hacker Lab</title>
+<style>
+body { font-family: Arial; background:#111; color:white; }
+button { padding:10px; margin:5px; }
+</style>
+</head>
+
+<body>
+
+<h1>🧠 Hacker Lab</h1>
+
+<input id="projectName" placeholder="Project name">
+<button onclick="createProject()">Create Project</button>
+
+<h2>Projects</h2>
+<div id="projects"></div>
+
+<h2>AI Chat (Demo)</h2>
+<input id="aiInput" placeholder="Ask AI something">
+<button onclick="askAI()">Ask</button>
+
+<p id="aiResponse"></p>
+
+<script>
+
+async function loadProjects(){
+    const res = await fetch("/projects");
+    const data = await res.json();
+
+    let html = "";
+    data.forEach(p=>{
+        html += `<p>${p.name}</p>`;
+    });
+
+    document.getElementById("projects").innerHTML = html;
+}
+
+async function createProject(){
+    const name = document.getElementById("projectName").value;
+
+    await fetch("/projects",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name})
+    });
+
+    loadProjects();
+}
+
+function askAI(){
+    const input = document.getElementById("aiInput").value;
+    document.getElementById("aiResponse").innerText =
+        "AI feature coming soon: " + input;
+}
+
+loadProjects();
+
+</script>
+
+</body>
+</html>
